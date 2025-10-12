@@ -3,7 +3,7 @@ This project is a simple casino-themed application built using Python to help le
 
 ## Features
 - 
-  
+    
 ## Future Plans
 - **Lucky Dice**
 - **Wheel of Fortune**
