@@ -5,6 +5,9 @@ This project is a simple casino-themed application built using Python to help le
 - 
     
 ## Future Plans
+- **Main Menu** for game selection
+- **Settings** for fullscreen, resolution, audio, etc.
+
 - **Lucky Dice**
 - **Wheel of Fortune**
 - **Coin Toss**
