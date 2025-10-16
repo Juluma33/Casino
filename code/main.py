@@ -1,5 +1,6 @@
-import pygame, random
+import pygame, random, json
 from os.path import join
+
 
 #general setup
 pygame.init()
@@ -15,9 +16,10 @@ pygame.display.set_icon(icon_surface)
 
 current_state = 'main_menu'
 
+
 # backgrounds
 ranbg_main = ['aces.png', 'dices.png', 'rolet.png', 'rolet2.png']
-BG_main = pygame.image.load(join('images', 'main', random.choice(ranbg_main)))
+BG_main = pygame.image.load(join('images', 'main', random.choice(ranbg_main))).convert_alpha()
 BG_main = pygame.transform.scale(BG_main, (Window_Width, Window_Height))
 
 BG_settings = pygame.Surface((Window_Width, Window_Height))
@@ -26,10 +28,38 @@ BG_settings.fill((100, 50, 20))
 BG_lucky_dices = pygame.Surface((Window_Width, Window_Height))
 BG_lucky_dices.fill((100, 50, 20))
 
+
 # Button picture
-button_surface = pygame.image.load(join('images', 'buttonbg.png'))
-button_width, button_height = 400, 200
+button_surface = pygame.image.load(join('images', 'buttonbg.png')).convert_alpha()
+button_width, button_height = 300, 100
 button_surface = pygame.transform.scale(button_surface, (button_width, button_height))
+
+
+# Chip Counter
+
+def load_data():
+    try:
+        with open('save_data.json', 'r') as file:
+            data = json.load(file)
+            return data.get('chips', 1000)
+    except FileNotFoundError:
+        return 1000
+
+def save_data(chips):
+    with open('save_data.json', 'w') as file:
+        json.dump({'chips': chips}, file)
+
+def win_chips(amount):
+    global chip_count
+    chip_count += amount
+    save_data(chip_count)
+
+def lose_chips(amount):
+    global chip_count
+    chip_count = max(0, chip_count - amount)
+    save_data(chip_count)
+
+chip_count = load_data()
 
 
 # class
@@ -85,6 +115,10 @@ def main_menu():
     settings_button = Button(button_surface, 200, 400, 'Settings', open_settings)
     buttons = [quit_button, settings_button]
     
+    def draw_chip_counter():
+        chip_text = main_font.render(f'chips: {chip_count}', True, 'white')
+        display_surface.blit(chip_text, (100,100))
+    
     while current_state == 'main_menu' and running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -94,6 +128,8 @@ def main_menu():
                     button.checkForInput(pygame.mouse.get_pos()) 
         
         display_surface.blit(BG_main, (0,0))
+        
+        draw_chip_counter()
         
         for button in buttons:
             button.changeColor(pygame.mouse.get_pos())
@@ -149,6 +185,9 @@ while running:
         main_menu()
     elif current_state == 'settings':
         settings_menu()
+    elif current_state == 'lucky_dices':
+        lucky_dices()
 
 
+save_data(chip_count)
 pygame.quit()
