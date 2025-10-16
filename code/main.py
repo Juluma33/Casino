@@ -26,10 +26,10 @@ BG_settings.fill((100, 50, 20))
 BG_lucky_dices = pygame.Surface((Window_Width, Window_Height))
 BG_lucky_dices.fill((100, 50, 20))
 
-
-# Import
+# Button picture
 button_surface = pygame.image.load(join('images', 'buttonbg.png'))
-button_surface = pygame.transform.scale(button_surface, (100, 200))
+button_width, button_height = 400, 200
+button_surface = pygame.transform.scale(button_surface, (button_width, button_height))
 
 
 # class
@@ -81,7 +81,7 @@ def go_lucky_dices():
 
 # Menu functions
 def main_menu():
-    quit_button = Button(button_surface, 100, 400, 'Quit', quit_game)
+    quit_button = Button(button_surface, 600, 650, 'Quit', quit_game)
     settings_button = Button(button_surface, 200, 400, 'Settings', open_settings)
     buttons = [quit_button, settings_button]
     
