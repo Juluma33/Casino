@@ -5,7 +5,7 @@ from os.path import join
 pygame.init()
 running = True
 clock = pygame.time.Clock()
-main_font = pygame.font.SysFont('cambria', 20)
+main_font = pygame.font.Font(join('images', 'BankGothic Md BT.ttf'), 40)
 
 Window_Width, Window_Height = 1280, 720
 display_surface = pygame.display.set_mode((Window_Width, Window_Height))
