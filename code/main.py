@@ -23,6 +23,9 @@ BG_main = pygame.transform.scale(BG_main, (Window_Width, Window_Height))
 BG_settings = pygame.Surface((Window_Width, Window_Height))
 BG_settings.fill((100, 50, 20))
 
+BG_lucky_dices = pygame.Surface((Window_Width, Window_Height))
+BG_lucky_dices.fill((100, 50, 20))
+
 
 # Import
 button_surface = pygame.image.load(join('images', 'buttonbg.png'))
@@ -71,7 +74,7 @@ def open_settings():
     current_state = 'settings'
 
 
-def lucky_dices():
+def go_lucky_dices():
     global current_state
     current_state = 'lucky_dices'
 
@@ -112,6 +115,27 @@ def settings_menu():
                     button.checkForInput(pygame.mouse.get_pos())
         
         display_surface.blit(BG_settings, (0,0))
+        for button in buttons:
+            button.changeColor(pygame.mouse.get_pos())
+            button.update()
+        
+        pygame.display.update()
+        clock.tick(60)
+
+
+def lucky_dices():
+    back_button = Button(button_surface, 100 ,200, 'Back', back_to_menu)
+    buttons = [back_button]
+    
+    while current_state == 'lucky_dices' and running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                quit_game()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                for button in buttons:
+                    button.checkForInput(pygame.mouse.get_pos())
+        
+        display_surface.blit(BG_lucky_dices, (0,0))
         for button in buttons:
             button.changeColor(pygame.mouse.get_pos())
             button.update()
