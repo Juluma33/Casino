@@ -30,11 +30,11 @@ class Button():
     
     def checkForInput(self, position):
         if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
-            print('1')
+            print('Button Press!')
     
     def changeColor(self, position):
         if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
-            self.text = main_font.render(self.text_input, True, 'green')
+            self.text = main_font.render(self.text_input, True, 'gold')
         else:
             self.text = main_font.render(self.text_input, True, 'white')
 
@@ -44,33 +44,37 @@ ranbg_main = ['aces.png', 'dices.png', 'rolet.png', 'rolet2.png']
 BG_main = pygame.image.load(join('images', 'main', random.choice(ranbg_main)))
 BG_main = pygame.transform.scale(BG_main, (Window_Width, Window_Height))
 
-# Games selection
+# Import
+button_surface = pygame.image.load(join('images', 'buttonbg.png'))
+button_surface = pygame.transform.scale(button_surface, (100, 200))
 
 
 
 
-while running:
-    
-    
-    
-    
-    #framerate
-    dt = clock.tick() / 1000
-    
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-    
-    # display
-    display_surface.blit(BG_main)
-    
-    
-    
-    
-    
-    pygame.display.update()
 
 
+def main_menu():
+    global running
+    
+    quit_button = Button(button_surface, 100, 200, 'Test')
+    
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                quit_button.checkForInput(pygame.mouse.get_pos()) 
+        
+        # display
+        display_surface.blit(BG_main)
+        
+        quit_button.update()
+        quit_button.changeColor(pygame.mouse.get_pos())
+        
+        
+        pygame.display.update()
+
+main_menu()
 
 
-pygame.QUIT()
+pygame.quit()
