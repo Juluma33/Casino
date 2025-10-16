@@ -7,7 +7,6 @@ I´m doing this because I´ve lost everything in Monopoly Poker
     
 ## Fetures in progress
 - **Main Menu** for game selection
-- **Settings** for fullscreen, resolution, audio, etc.
 
 ## Future Plans
 - **Lucky Dice**
@@ -15,3 +14,6 @@ I´m doing this because I´ve lost everything in Monopoly Poker
 - **Coin Toss**
 - **Blackjack**
 - **Flappy Bird**
+
+## Maybe (minimal priority)
+- **Settings** for fullscreen, resolution, audio, etc.
