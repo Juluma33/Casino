@@ -111,13 +111,13 @@ def go_lucky_dices():
 
 # Menu functions
 def main_menu():
-    quit_button = Button(button_surface, 600, 650, 'Quit', quit_game)
-    settings_button = Button(button_surface, 200, 400, 'Settings', open_settings)
+    quit_button = Button(button_surface, 200, 650, 'Quit', quit_game)
+    settings_button = Button(button_surface, 500, 650, 'Settings', open_settings)
     buttons = [quit_button, settings_button]
     
     def draw_chip_counter():
         chip_text = main_font.render(f'chips: {chip_count}', True, 'white')
-        display_surface.blit(chip_text, (100,100))
+        display_surface.blit(chip_text, (50,50))
     
     while current_state == 'main_menu' and running:
         for event in pygame.event.get():
@@ -139,7 +139,7 @@ def main_menu():
         clock.tick(60)
 
 def settings_menu():
-    back_button = Button(button_surface, 100 ,200, 'Back', back_to_menu)
+    back_button = Button(button_surface, 200, 650, 'Back', back_to_menu)
     buttons = [back_button]
     
     while current_state == 'settings' and running:
