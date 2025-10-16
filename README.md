@@ -1,15 +1,12 @@
 # Casino
-This project is a casino-themed application built using Pygame. The project includes basic games and functionalities that simulate common casino games.
-I´m doing this because I´ve lost everything in Monopoly Poker
+Little Casino-themed game. I´m doing this just because I´ve lost everything in Monopoly Poker and learning python seemed easier than earning something in that game.
 
 ## Features
 - 
 
 ## Fetures in progress
 - **Main Menu** for game selection
-- **Settings** for fullscreen, resolution, audio, etc.
-
-- **Flappy Bird**
+- - **Settings** for fullscreen, resolution, audio, etc.
 
 ## Future Plans
 - **Lucky Dice**
