@@ -4,16 +4,16 @@ I´m doing this because I´ve lost everything in Monopoly Poker
 
 ## Features
 - 
-    
+
 ## Fetures in progress
 - **Main Menu** for game selection
+- **Settings** for fullscreen, resolution, audio, etc.
+
+- **Flappy Bird**
 
 ## Future Plans
 - **Lucky Dice**
 - **Wheel of Fortune**
 - **Coin Toss**
 - **Blackjack**
-- **Flappy Bird**
 
-## Maybe (minimal priority)
-- **Settings** for fullscreen, resolution, audio, etc.
