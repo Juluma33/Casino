@@ -35,7 +35,7 @@ button_width, button_height = 300, 100
 button_surface = pygame.transform.scale(button_surface, (button_width, button_height))
 
 
-# Chip Counter
+# Chip System
 
 def load_data():
     try:
@@ -60,6 +60,33 @@ def lose_chips(amount):
     save_data(chip_count)
 
 chip_count = load_data()
+
+def chip_reset():
+    global chip_count
+    chip_count = 1000
+    
+    ok = Button(button_surface, Window_Width/2, Window_Height - 300, 'Thanks', back_to_menu)
+    
+    text_surf = main_font.render('Chips got restocked', True, 'gold')
+    text_rect = text_surf.get_rect(center=(Window_Width // 2, Window_Height - 500))
+    
+    waiting = True
+    while waiting:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                ok.checkForInput(pygame.mouse.get_pos())
+                waiting = False
+        
+        pygame.draw.rect(display_surface, (0,0,0), (0, 0, Window_Width, Window_Height))
+        ok.changeColor(pygame.mouse.get_pos())
+        ok.update()
+        display_surface.blit(text_surf, text_rect)
+        
+        pygame.display.update()
+        clock.tick(60)
 
 
 # class
@@ -181,12 +208,16 @@ def lucky_dices():
 
 # main loop
 while running:
-    if current_state == 'main_menu':
+    if chip_count < 1000:
+        chip_reset()
+    
+    elif current_state == 'main_menu':
         main_menu()
     elif current_state == 'settings':
         settings_menu()
     elif current_state == 'lucky_dices':
         lucky_dices()
+
 
 
 save_data(chip_count)
