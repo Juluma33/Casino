@@ -36,7 +36,6 @@ button_surface = pygame.transform.scale(button_surface, (button_width, button_he
 
 
 # Chip System
-
 def load_data():
     try:
         with open('save_data.json', 'r') as file:
@@ -130,7 +129,6 @@ def open_settings():
     global current_state
     current_state = 'settings'
 
-
 def go_lucky_dices():
     global current_state
     current_state = 'lucky_dices'
@@ -184,7 +182,6 @@ def settings_menu():
         
         pygame.display.update()
         clock.tick(60)
-
 
 def lucky_dices():
     back_button = Button(button_surface, 100 ,200, 'Back', back_to_menu)
