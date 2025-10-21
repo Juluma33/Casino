@@ -138,7 +138,10 @@ def go_lucky_dices():
 def main_menu():
     quit_button = Button(button_surface, 200, 650, 'Quit', quit_game)
     settings_button = Button(button_surface, 500, 650, 'Settings', open_settings)
-    buttons = [quit_button, settings_button]
+
+    ## Buttons for games
+    lucky_dices_button = Button(button_surface, 200, 450, 'Lucky Dice', go_lucky_dices)
+    buttons = [quit_button, settings_button, lucky_dices_button]
     
     def draw_chip_counter():
         chip_text = main_font.render(f'chips: {chip_count}', True, 'white')
