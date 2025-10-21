@@ -35,6 +35,11 @@ button_width, button_height = 300, 100
 button_surface = pygame.transform.scale(button_surface, (button_width, button_height))
 
 
+# Dice images
+dices_images = {i: pygame.image.load(join('images', '', f'dices{i}.png')).convert_alpha for i in range(1, 7)}
+
+
+
 # Chip System
 def load_data():
     try:
@@ -194,6 +199,12 @@ def lucky_dices():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 for button in buttons:
                     button.checkForInput(pygame.mouse.get_pos())
+        
+        
+        # Game
+
+        
+        
         
         display_surface.blit(BG_lucky_dices, (0,0))
         for button in buttons:
