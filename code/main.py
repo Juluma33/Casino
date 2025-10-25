@@ -8,7 +8,7 @@ running = True
 clock = pygame.time.Clock()
 main_font = pygame.font.Font(join('images', 'BankGothic Md BT.ttf'), 40)
 
-Window_Width, Window_Height = 1280, 720
+Window_Width, Window_Height = 1280, 720   # Auch in imgs ändern!
 display_surface = pygame.display.set_mode((Window_Width, Window_Height))
 pygame.display.set_caption('Juluma Royale')
 icon_surface = pygame.image.load(join('images','logos', 'monogramm_black.png')).convert_alpha()
@@ -17,27 +17,8 @@ pygame.display.set_icon(icon_surface)
 current_state = 'main_menu'
 
 
-# backgrounds
-ranbg_main = ['aces.png', 'dices.png', 'rolet.png', 'rolet2.png']
-BG_main = pygame.image.load(join('images', 'main', random.choice(ranbg_main))).convert_alpha()
-BG_main = pygame.transform.scale(BG_main, (Window_Width, Window_Height))
-
-BG_settings = pygame.image.load(join('images', 'settingsbg.png')).convert_alpha()
-BG_settings = pygame.transform.scale(BG_settings, (Window_Width, Window_Height))
-
-BG_lucky_dices = pygame.Surface((Window_Width, Window_Height))
-BG_lucky_dices.fill((100, 50, 20))
-
-
-# Button picture
-button_surface = pygame.image.load(join('images', 'buttonbg.png')).convert_alpha()
-button_width, button_height = 300, 100
-button_surface = pygame.transform.scale(button_surface, (button_width, button_height))
-
-
-# Dice images
-dices_images = {i: pygame.image.load(join('images', '', f'dices{i}.png')).convert_alpha for i in range(1, 7)}
-
+# imgs
+from imgs import *
 
 
 # Chip System
@@ -48,28 +29,22 @@ def load_data():
             return data.get('chips', 1000)
     except FileNotFoundError:
         return 1000
-
 def save_data(chips):
     with open('save_data.json', 'w') as file:
         json.dump({'chips': chips}, file)
-
 def win_chips(amount):
     global chip_count
     chip_count += amount
     save_data(chip_count)
-
 def lose_chips(amount):
     global chip_count
     chip_count = max(0, chip_count - amount)
     save_data(chip_count)
-
-chip_count = load_data()
-
 def chip_reset():
     global chip_count
     chip_count = 1000
     
-    ok = Button(button_surface, Window_Width/2, Window_Height - 300, 'Thanks', back_to_menu)
+    ok = Button(s_button_surface, Window_Width/2, Window_Height - 300, 'Thanks', back_to_menu)
     
     text_surf = main_font.render('Chips got restocked', True, 'gold')
     text_rect = text_surf.get_rect(center=(Window_Width // 2, Window_Height - 500))
@@ -91,6 +66,7 @@ def chip_reset():
         
         pygame.display.update()
         clock.tick(60)
+chip_count = load_data()
 
 
 # class
@@ -125,15 +101,12 @@ class Button():
 def quit_game():
     global running
     running = False
-
 def back_to_menu():
     global current_state
     current_state = 'main_menu'
-
 def open_settings():
     global current_state
     current_state = 'settings'
-
 def go_lucky_dices():
     global current_state
     current_state = 'lucky_dices'
@@ -141,11 +114,12 @@ def go_lucky_dices():
 
 # Menu functions
 def main_menu():
-    quit_button = Button(button_surface, 200, 650, 'Quit', quit_game)
-    settings_button = Button(button_surface, 500, 650, 'Settings', open_settings)
-
+    quit_button = Button(s_button_surface, 200, 650, 'Quit', quit_game)
+    settings_button = Button(s_button_surface, 500, 650, 'Settings', open_settings)
+    
     ## Buttons for games
-    lucky_dices_button = Button(button_surface, 200, 450, 'Lucky Dice', go_lucky_dices)
+    lucky_dices_button = Button(s_button_surface, 200, 450, 'Lucky Dice', go_lucky_dices)
+    
     buttons = [quit_button, settings_button, lucky_dices_button]
     
     def draw_chip_counter():
@@ -172,7 +146,7 @@ def main_menu():
         clock.tick(60)
 
 def settings_menu():
-    back_button = Button(button_surface, 200, 650, 'Back', back_to_menu)
+    back_button = Button(s_button_surface, 200, 650, 'Back', back_to_menu)
     buttons = [back_button]
     
     while current_state == 'settings' and running:
@@ -192,7 +166,7 @@ def settings_menu():
         clock.tick(60)
 
 def lucky_dices():
-    back_button = Button(button_surface, 100 ,200, 'Back', back_to_menu)
+    back_button = Button(s_button_surface, 100 ,200, 'Back', back_to_menu)
     buttons = [back_button]
     
     while current_state == 'lucky_dices' and running:
@@ -205,7 +179,7 @@ def lucky_dices():
         
         
         # Game
-
+        
         
         
         
