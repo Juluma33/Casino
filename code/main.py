@@ -1,4 +1,4 @@
-import pygame, random, json
+import pygame, random, json, sys
 from os.path import join
 
 
@@ -19,27 +19,11 @@ current_state = 'main_menu'
 
 # imgs
 from imgs import *
+BG_main = random_mainBG()
 
 
 # Chip System
-def load_data():
-    try:
-        with open('save_data.json', 'r') as file:
-            data = json.load(file)
-            return data.get('chips', 1000)
-    except FileNotFoundError:
-        return 1000
-def save_data(chips):
-    with open('save_data.json', 'w') as file:
-        json.dump({'chips': chips}, file)
-def win_chips(amount):
-    global chip_count
-    chip_count += amount
-    save_data(chip_count)
-def lose_chips(amount):
-    global chip_count
-    chip_count = max(0, chip_count - amount)
-    save_data(chip_count)
+from chip_system import *
 def chip_reset():
     global chip_count
     chip_count = 1000
@@ -53,8 +37,9 @@ def chip_reset():
     while waiting:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                save_data(chip_count)
                 pygame.quit()
-                exit()
+                sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 ok.checkForInput(pygame.mouse.get_pos())
                 waiting = False
@@ -66,7 +51,6 @@ def chip_reset():
         
         pygame.display.update()
         clock.tick(60)
-chip_count = load_data()
 
 
 # class
@@ -101,15 +85,29 @@ class Button():
 def quit_game():
     global running
     running = False
+
 def back_to_menu():
     global current_state
     current_state = 'main_menu'
+    global BG_main
+    BG_main = random_mainBG()
+
 def open_settings():
     global current_state
     current_state = 'settings'
+
 def go_lucky_dices():
     global current_state
     current_state = 'lucky_dices'
+
+
+def gameclose_buttoninput(buttons):
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            quit_game()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            for button in buttons:
+                button.checkForInput(pygame.mouse.get_pos()) 
 
 
 # Menu functions
@@ -118,7 +116,7 @@ def main_menu():
     settings_button = Button(s_button_surface, 500, 650, 'Settings', open_settings)
     
     ## Buttons for games
-    lucky_dices_button = Button(s_button_surface, 200, 450, 'Lucky Dice', go_lucky_dices)
+    lucky_dices_button = Button(m_button_surface, 200, 450, 'Lucky Dice', go_lucky_dices)
     
     buttons = [quit_button, settings_button, lucky_dices_button]
     
@@ -127,12 +125,7 @@ def main_menu():
         display_surface.blit(chip_text, (50,50))
     
     while current_state == 'main_menu' and running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                quit_game()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                for button in buttons:
-                    button.checkForInput(pygame.mouse.get_pos()) 
+        gameclose_buttoninput(buttons)
         
         display_surface.blit(BG_main, (0,0))
         
@@ -144,18 +137,16 @@ def main_menu():
         
         pygame.display.update()
         clock.tick(60)
+        
+        if current_state != 'main_menu' or not running:
+            break
 
 def settings_menu():
     back_button = Button(s_button_surface, 200, 650, 'Back', back_to_menu)
     buttons = [back_button]
     
     while current_state == 'settings' and running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                quit_game()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                for button in buttons:
-                    button.checkForInput(pygame.mouse.get_pos())
+        gameclose_buttoninput(buttons)
         
         display_surface.blit(BG_settings, (0,0))
         for button in buttons:
@@ -164,18 +155,16 @@ def settings_menu():
         
         pygame.display.update()
         clock.tick(60)
+        
+        if current_state != 'settings' or not running:
+            break
 
 def lucky_dices():
     back_button = Button(s_button_surface, 100 ,200, 'Back', back_to_menu)
     buttons = [back_button]
     
     while current_state == 'lucky_dices' and running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                quit_game()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                for button in buttons:
-                    button.checkForInput(pygame.mouse.get_pos())
+        gameclose_buttoninput(buttons)
         
         
         # Game
@@ -190,6 +179,9 @@ def lucky_dices():
         
         pygame.display.update()
         clock.tick(60)
+        
+        if current_state != 'lucky_dices' or not running:
+            break
 
 # main loop
 while running:
