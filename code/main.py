@@ -101,6 +101,7 @@ def go_lucky_dices():
     current_state = 'lucky_dices'
 
 
+# Game Close    and    Button input
 def gameclose_buttoninput(buttons):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
