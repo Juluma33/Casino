@@ -6,24 +6,44 @@ from os.path import join
 pygame.init()
 running = True
 clock = pygame.time.Clock()
-main_font = pygame.font.Font(join('images', 'BankGothic Md BT.ttf'), 40)
+current_state = 'main_menu'
 
-Window_Width, Window_Height = 1280, 720   # Auch in imgs ändern!
+from settings import *
+
 display_surface = pygame.display.set_mode((Window_Width, Window_Height))
 pygame.display.set_caption('Juluma Royale')
 icon_surface = pygame.image.load(join('images','logos', 'monogramm_black.png')).convert_alpha()
 pygame.display.set_icon(icon_surface)
 
-current_state = 'main_menu'
 
-
-# imgs
+# images / buttons / fonts
 from imgs import *
 BG_main = random_mainBG()
 
 
 # Chip System
-from chip_system import *
+def load_data():
+    try:
+        with open('save_data.json', 'r') as file:
+            data = json.load(file)
+            return data.get('chips', 1000)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return 1000
+
+def save_data(chips):
+    with open('save_data.json', 'w') as file:
+        json.dump({'chips': chips}, file)
+
+def win_chips(amount):
+    global chip_count
+    chip_count += amount
+    save_data(chip_count)
+
+def lose_chips(amount):
+    global chip_count
+    chip_count = max(0, chip_count - amount)
+    save_data(chip_count)
+
 def chip_reset():
     global chip_count
     chip_count = 1000
@@ -51,6 +71,12 @@ def chip_reset():
         
         pygame.display.update()
         clock.tick(60)
+
+def draw_chip_counter():
+    chip_text = big_font.render(f'chips: {chip_count}', True, 'white')
+    display_surface.blit(chip_text, (100,50))
+
+chip_count = load_data()
 
 
 # class
@@ -101,7 +127,7 @@ def go_lucky_dices():
     current_state = 'lucky_dices'
 
 
-# Game Close    and    Button input
+# Menu functions
 def gameclose_buttoninput(buttons):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -110,20 +136,15 @@ def gameclose_buttoninput(buttons):
             for button in buttons:
                 button.checkForInput(pygame.mouse.get_pos()) 
 
-
-# Menu functions
 def main_menu():
     quit_button = Button(s_button_surface, 200, 650, 'Quit', quit_game)
     settings_button = Button(s_button_surface, 500, 650, 'Settings', open_settings)
     
     ## Buttons for games
-    lucky_dices_button = Button(m_button_surface, 200, 450, 'Lucky Dice', go_lucky_dices)
+    lucky_dices_button = Button(m_button_surface, 350, 300, 'Lucky Dice', go_lucky_dices)
     
     buttons = [quit_button, settings_button, lucky_dices_button]
     
-    def draw_chip_counter():
-        chip_text = main_font.render(f'chips: {chip_count}', True, 'white')
-        display_surface.blit(chip_text, (50,50))
     
     while current_state == 'main_menu' and running:
         gameclose_buttoninput(buttons)
@@ -161,7 +182,7 @@ def settings_menu():
             break
 
 def lucky_dices():
-    back_button = Button(s_button_surface, 100 ,200, 'Back', back_to_menu)
+    back_button = Button(s_button_surface, 200, 650, 'Back', back_to_menu)
     buttons = [back_button]
     
     while current_state == 'lucky_dices' and running:

@@ -1,10 +1,14 @@
 import pygame, random
 from os.path import join
+from settings import Window_Height, Window_Width
 
-Window_Width, Window_Height = 1280, 720
+
+# Fonts
+main_font = pygame.font.Font(join('images', 'BankGothic Md BT.ttf'), 40)
+big_font = pygame.font.Font(join('images', 'BankGothic Md BT.ttf'), 60)
+
 
 # BGs
-
 def random_mainBG():
     global BG_main
     
@@ -22,18 +26,15 @@ BG_lucky_dices = pygame.image.load(join('images', 'main', 'dices.png')).convert_
 BG_lucky_dices = pygame.transform.scale(BG_lucky_dices, (Window_Width, Window_Height))
 
 
-
-
-#Buttons
-
+# Buttons
 ## small: 300 x 100
 s_button_surface = pygame.image.load(join('images', 'buttonbg.png')).convert_alpha()
 s_button_width, s_button_height = 300, 100
 s_button_surface = pygame.transform.scale(s_button_surface, (s_button_width, s_button_height))
 
-## medium: 400 x 150
+## medium: 450 x 150
 m_button_surface = pygame.image.load(join('images', 'buttonbg.png')).convert_alpha()
-m_button_width, m_button_height = 400, 150
+m_button_width, m_button_height = 450, 150
 m_button_surface = pygame.transform.scale(m_button_surface, (m_button_width, m_button_height))
 
 
