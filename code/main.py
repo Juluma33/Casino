@@ -8,7 +8,7 @@ running = True
 clock = pygame.time.Clock()
 current_state = 'main_menu'
 
-from settings import *
+from settings import update_data, Window_Width, Window_Height
 
 display_surface = pygame.display.set_mode((Window_Width, Window_Height))
 pygame.display.set_caption('Juluma Royale')
@@ -22,27 +22,23 @@ BG_main = random_mainBG()
 
 
 # Chip System
-def load_data():
+def load_chipcount():
     try:
-        with open('save_data.json', 'r') as file:
+        with open('data.json', 'r') as file:
             data = json.load(file)
             return data.get('chips', 1000)
     except (FileNotFoundError, json.JSONDecodeError):
         return 1000
 
-def save_data(chips):
-    with open('save_data.json', 'w') as file:
-        json.dump({'chips': chips}, file)
-
 def win_chips(amount):
     global chip_count
     chip_count += amount
-    save_data(chip_count)
+    update_save_data(chip_count)
 
 def lose_chips(amount):
     global chip_count
     chip_count = max(0, chip_count - amount)
-    save_data(chip_count)
+    update_save_data(chip_count)
 
 def chip_reset():
     global chip_count
@@ -57,7 +53,7 @@ def chip_reset():
     while waiting:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                save_data(chip_count)
+                update_data(chip_count)
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -76,7 +72,7 @@ def draw_chip_counter():
     chip_text = big_font.render(f'chips: {chip_count}', True, 'white')
     display_surface.blit(chip_text, (100,50))
 
-chip_count = load_data()
+chip_count = load_chipcount()
 
 
 # class
@@ -219,5 +215,5 @@ while running:
 
 
 
-save_data(chip_count)
+update_data(chips = chip_count)
 pygame.quit()
