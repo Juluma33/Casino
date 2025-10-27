@@ -1,3 +1,6 @@
+ <!--START_SECTION:waka-->
+<!--END_SECTION:waka-->
+
 # Casino
 Little Casino-themed game. I´m doing this just because I´ve lost everything in Monopoly Poker and learning python seemed easier than earning something in that game.
 
