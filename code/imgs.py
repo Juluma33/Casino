@@ -38,5 +38,7 @@ m_button_width, m_button_height = 450, 150
 m_button_surface = pygame.transform.scale(m_button_surface, (m_button_width, m_button_height))
 
 
-# Dice images
-dices_images = {i: pygame.image.load(join('images', 'dices', f'dice{i}.png')).convert_alpha() for i in range(1, 7)}
+
+
+
+
