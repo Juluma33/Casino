@@ -3,6 +3,35 @@ from os.path import join
 from settings import Window_Height, Window_Width
 
 
+# class
+class Button():
+    def __init__(self, image, x_pos, y_pos, text_input, on_click=None):
+        self.image = image
+        self.x_pos = x_pos
+        self.y_pos = y_pos
+        self.rect = self.image.get_rect(center = (self.x_pos, self.y_pos))
+        self.text_input = text_input
+        self.text = main_font.render(self.text_input, True, 'white')
+        self.text_rect = self.text.get_rect(center = (self.x_pos, self.y_pos))
+        self.on_click = on_click
+    
+    def update(self, surface):
+        surface.blit(self.image, self.rect)
+        surface.blit(self.text, self.text_rect)
+    
+    def checkForInput(self, position):
+        if self.rect.collidepoint(position):
+            if self.on_click:
+                self.on_click()
+    
+    def changeColor(self, position):
+        if self.rect.collidepoint(position):
+            self.text = main_font.render(self.text_input, True, 'gold')
+        else:
+            self.text = main_font.render(self.text_input, True, 'white')
+
+
+
 # Fonts
 main_font = pygame.font.Font(join('images', 'BankGothic Md BT.ttf'), 40)
 big_font = pygame.font.Font(join('images', 'BankGothic Md BT.ttf'), 60)
@@ -27,6 +56,11 @@ BG_lucky_dices = pygame.transform.scale(BG_lucky_dices, (Window_Width, Window_He
 
 
 # Buttons
+## miniscular
+mi_button_surface = pygame.image.load(join('images', 'buttonbg.png')).convert_alpha()
+mi_button_width, mi_button_height = 60, 80
+mi_button_surface = pygame.transform.scale(mi_button_surface, (mi_button_width, mi_button_height))
+
 ## small: 300 x 100
 s_button_surface = pygame.image.load(join('images', 'buttonbg.png')).convert_alpha()
 s_button_width, s_button_height = 300, 100
@@ -36,7 +70,6 @@ s_button_surface = pygame.transform.scale(s_button_surface, (s_button_width, s_b
 m_button_surface = pygame.image.load(join('images', 'buttonbg.png')).convert_alpha()
 m_button_width, m_button_height = 450, 150
 m_button_surface = pygame.transform.scale(m_button_surface, (m_button_width, m_button_height))
-
 
 
 

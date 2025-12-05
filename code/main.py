@@ -22,7 +22,7 @@ icon_surface = pygame.image.load(join('images','logos', 'monogramm_black.png')).
 pygame.display.set_icon(icon_surface)
 
 
-# images / buttons / fonts
+# images / buttons / fonts / Classes
 from imgs import *
 BG_main = random_mainBG()
 
@@ -97,34 +97,6 @@ def draw_scaled():
     scaled_surface = pygame.transform.smoothscale(base_surface, (window_w, window_h))
     display_surface.blit(scaled_surface, (0, 0))
     pygame.display.update()
-
-
-# class
-class Button():
-    def __init__(self, image, x_pos, y_pos, text_input, on_click=None):
-        self.image = image
-        self.x_pos = x_pos
-        self.y_pos = y_pos
-        self.rect = self.image.get_rect(center = (self.x_pos, self.y_pos))
-        self.text_input = text_input
-        self.text = main_font.render(self.text_input, True, 'white')
-        self.text_rect = self.text.get_rect(center = (self.x_pos, self.y_pos))
-        self.on_click = on_click
-    
-    def update(self, surface):
-        surface.blit(self.image, self.rect)
-        surface.blit(self.text, self.text_rect)
-    
-    def checkForInput(self, position):
-        if self.rect.collidepoint(position):
-            if self.on_click:
-                self.on_click()
-    
-    def changeColor(self, position):
-        if self.rect.collidepoint(position):
-            self.text = main_font.render(self.text_input, True, 'gold')
-        else:
-            self.text = main_font.render(self.text_input, True, 'white')
 
 
 # state functions
@@ -209,15 +181,32 @@ def settings_menu():
             break
 
 def lucky_dices():
+    
+    dicean_on = False
+    def play():
+        nonlocal dicean_on, time_running, last_frame_change, final_frame_index
+        time_running = 0
+        last_frame_change = 0
+        final_frame_index = None
+        dicean_on = True
+    
     back_button = Button(s_button_surface, 200, 650, 'Back', back_to_menu)
-    buttons = [back_button]
+    play_button = Button(s_button_surface, 200, 500, 'Play', play)
+    b_1 = Button(mi_button_surface, 150, 200, '1')
+    b_2 = Button(mi_button_surface, 250, 200, '2')
+    b_3 = Button(mi_button_surface, 150, 300, '3')
+    b_4 = Button(mi_button_surface, 250, 300, '4')
+    b_5 = Button(mi_button_surface, 150, 400, '5')
+    b_6 = Button(mi_button_surface, 250, 400, '6')
+    buttons = [back_button, play_button, b_1, b_2, b_3, b_4, b_5, b_6]
+    
     
     # surface for animation
-    dicesurf_scale = 200
+    dicesurf_scale = 250
     dicesurf = pygame.Surface((dicesurf_scale, dicesurf_scale), pygame.SRCALPHA)
     
     # Frames
-    dices = [
+    dices_1_6 = [
         pygame.transform.smoothscale(pygame.image.load(join('images','dices','dice1.png')).convert_alpha(), (dicesurf_scale,dicesurf_scale)),
         pygame.transform.smoothscale(pygame.image.load(join('images','dices','dice2.png')).convert_alpha(), (dicesurf_scale,dicesurf_scale)),
         pygame.transform.smoothscale(pygame.image.load(join('images','dices','dice3.png')).convert_alpha(), (dicesurf_scale,dicesurf_scale)),
@@ -226,18 +215,15 @@ def lucky_dices():
         pygame.transform.smoothscale(pygame.image.load(join('images','dices','dice6.png')).convert_alpha(), (dicesurf_scale,dicesurf_scale)),
     ]
     
-    
     # timer for frame switch
     frame_time = 100
     last_frame_change = 0
-    
     dicean_duration = 2000
     time_running = 0
-    
-    current_frame = random.choice(dices)
-    dicean_on = True
-    
+    current_frame = random.choice(dices_1_6)
     final_frame_index = None                # index always -1 of rolled number
+    
+    
     
     while current_state == 'lucky_dices' and running:
         delta_time = clock.tick(60)
@@ -245,17 +231,17 @@ def lucky_dices():
         
         
         # Dice Animation
-        if dicean_on:
+        if dicean_on == True:
             last_frame_change += delta_time
             time_running += delta_time
             
             if last_frame_change >= frame_time:
                 last_frame_change = 0
-                current_frame = random.choice(dices)
+                current_frame = random.choice(dices_1_6)
             
             if time_running >= dicean_duration:
                 dicean_on = False
-                final_frame_index = dices.index(current_frame)
+                final_frame_index = dices_1_6.index(current_frame)
                 print('final frame index:', final_frame_index)
         
         dicesurf.fill((0,0,0,0))
@@ -268,7 +254,7 @@ def lucky_dices():
         
         
         base_surface.blit(BG_lucky_dices, (0,0))
-        base_surface.blit(dicesurf,(450,300))
+        base_surface.blit(dicesurf,(450,400))
         draw_chip_counter()
         update_buttons(buttons, base_surface)
         draw_scaled()
