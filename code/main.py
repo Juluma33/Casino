@@ -76,9 +76,13 @@ def chip_reset():
         draw_scaled()
         clock.tick(60)
 
-def draw_chip_counter():
+def draw_chip_counter_big(x, y):
     chip_text = big_font.render(f'chips: {chip_count}', True, 'white')
-    base_surface.blit(chip_text, (100,50))
+    base_surface.blit(chip_text, (x, y))
+
+def draw_chip_counter_small(x, y):
+    chip_text = main_font.render(f'chips: {chip_count}', True, 'white')
+    base_surface.blit(chip_text, (x, y))
 
 chip_count = load_chipcount()
 
@@ -154,7 +158,7 @@ def main_menu():
         gameclose_buttoninput(buttons)
         base_surface.fill((0, 0, 0))
         base_surface.blit(BG_main, (0,0))
-        draw_chip_counter()
+        draw_chip_counter_big(100, 50)
         
         update_buttons(buttons, base_surface)
         draw_scaled()
@@ -181,7 +185,7 @@ def settings_menu():
             break
 
 def lucky_dices():
-    
+    win_checked = False
     dicean_on = False
     def play():
         nonlocal dicean_on, time_running, last_frame_change, final_frame_index
@@ -192,18 +196,33 @@ def lucky_dices():
     
     back_button = Button(s_button_surface, 200, 650, 'Back', back_to_menu)
     play_button = Button(s_button_surface, 200, 500, 'Play', play)
-    b_1 = Button(mi_button_surface, 150, 200, '1')
-    b_2 = Button(mi_button_surface, 250, 200, '2')
-    b_3 = Button(mi_button_surface, 150, 300, '3')
-    b_4 = Button(mi_button_surface, 250, 300, '4')
-    b_5 = Button(mi_button_surface, 150, 400, '5')
-    b_6 = Button(mi_button_surface, 250, 400, '6')
-    buttons = [back_button, play_button, b_1, b_2, b_3, b_4, b_5, b_6]
+    buttons = [back_button, play_button]
+    
+    
+    # Guess win system and buttons
+    guessed_number = None
+    
+    def set_guess(n):
+        nonlocal guessed_number
+        guessed_number = n
+    
+    guess_positions = [
+        (150, 200),
+        (250, 200),
+        (150, 300),
+        (250, 300),
+        (150, 400),
+        (250, 400)
+    ]
+    
+    for i, (x, y) in enumerate(guess_positions, start=1):
+        buttons.append(Button(mi_button_surface, x, y, str(i), on_click=lambda n=i: set_guess(n)))
     
     
     # surface for animation
     dicesurf_scale = 250
     dicesurf = pygame.Surface((dicesurf_scale, dicesurf_scale), pygame.SRCALPHA)
+    
     
     # Frames
     dices_1_6 = [
@@ -215,6 +234,7 @@ def lucky_dices():
         pygame.transform.smoothscale(pygame.image.load(join('images','dices','dice6.png')).convert_alpha(), (dicesurf_scale,dicesurf_scale)),
     ]
     
+    
     # timer for frame switch
     frame_time = 100
     last_frame_change = 0
@@ -222,7 +242,6 @@ def lucky_dices():
     time_running = 0
     current_frame = random.choice(dices_1_6)
     final_frame_index = None                # index always -1 of rolled number
-    
     
     
     while current_state == 'lucky_dices' and running:
@@ -242,20 +261,25 @@ def lucky_dices():
             if time_running >= dicean_duration:
                 dicean_on = False
                 final_frame_index = dices_1_6.index(current_frame)
-                print('final frame index:', final_frame_index)
+                win_checked = False
+        
+        
+        # Check Win
+        if not dicean_on and final_frame_index is not None and not win_checked:
+            win_number = int(final_frame_index) + 1
+            if win_number == guessed_number:
+                win_chips(500)
+            win_checked = True
+        
         
         dicesurf.fill((0,0,0,0))
         dicesurf.blit(current_frame, (0,0))
         
         
         
-        
-        
-        
-        
         base_surface.blit(BG_lucky_dices, (0,0))
         base_surface.blit(dicesurf,(450,400))
-        draw_chip_counter()
+        draw_chip_counter_small(100, 50)
         update_buttons(buttons, base_surface)
         draw_scaled()
         
