@@ -56,10 +56,15 @@ BG_lucky_dices = pygame.transform.scale(BG_lucky_dices, (Window_Width, Window_He
 
 
 # Buttons
-## miniscular
+## miniscular: 60 x 80
 mi_button_surface = pygame.image.load(join('images', 'buttonbg.png')).convert_alpha()
 mi_button_width, mi_button_height = 60, 80
 mi_button_surface = pygame.transform.scale(mi_button_surface, (mi_button_width, mi_button_height))
+
+## stretched miniscular: 200 x 80
+st_mi_button_surface = pygame.image.load(join('images', 'buttonbg.png')).convert_alpha()
+st_mi_button_width, st_mi_button_height = 60, 80
+st_mi_button_surface = pygame.transform.scale(st_mi_button_surface, (st_mi_button_width, st_mi_button_height))
 
 ## small: 300 x 100
 s_button_surface = pygame.image.load(join('images', 'buttonbg.png')).convert_alpha()

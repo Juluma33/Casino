@@ -48,7 +48,7 @@ def lose_chips(amount):
 
 def chip_reset():
     global chip_count
-    chip_count = 1000
+    chip_count = 3000
     
     ok = Button(s_button_surface, Window_Width/2, Window_Height - 300, 'Thanks', back_to_menu)
     
@@ -71,7 +71,7 @@ def chip_reset():
         mx, my = get_scaled_mouse_pos()
         ok.changeColor(pygame.mouse.get_pos())
         ok.update(base_surface)
-        display_surface.blit(text_surf, text_rect)
+        base_surface.blit(text_surf, text_rect)
         
         draw_scaled()
         clock.tick(60)
@@ -187,44 +187,77 @@ def settings_menu():
 def lucky_dices():
     win_checked = False
     dicean_on = False
+    
     def play():
-        nonlocal dicean_on, time_running, last_frame_change, final_frame_index
+        nonlocal dicean_on, time_running, last_frame_change, final_frame_index, chips_set, chips_on_text_1
+        
+        if chips_set <= 0:
+            chips_set = 0
+            chips_on_text_1 = main_font.render(f'{chips_set} chips', True, 'white')
+            return
+        
+        if chips_set > chip_count:
+            chips_set = 0
+            chips_on_text_1 = main_font.render(f'{chips_set} chips', True, 'white')
+            return
+        
         time_running = 0
         last_frame_change = 0
         final_frame_index = None
+        lose_chips(chips_set)
         dicean_on = True
+    
     
     back_button = Button(s_button_surface, 200, 650, 'Back', back_to_menu)
     play_button = Button(s_button_surface, 200, 500, 'Play', play)
     buttons = [back_button, play_button]
     
     
-    # Guess win system and buttons
+    # Guess win
     guessed_number = None
+    chips_on_text_2 = main_font.render(f'on None', True, 'white')
     
     def set_guess(n):
-        nonlocal guessed_number
+        nonlocal guessed_number, chips_on_text_2
         guessed_number = n
+        chips_on_text_2 = main_font.render(f'on {guessed_number}', True, 'white')
     
     guess_positions = [
         (150, 200),
         (250, 200),
-        (150, 300),
-        (250, 300),
-        (150, 400),
-        (250, 400)
+        (150, 270),
+        (250, 270),
+        (150, 340),
+        (250, 340)
     ]
     
     for i, (x, y) in enumerate(guess_positions, start=1):
         buttons.append(Button(mi_button_surface, x, y, str(i), on_click=lambda n=i: set_guess(n)))
     
     
-    # surface for animation
+    # set chips
+    chips_set = 0
+    chips_on_text_1 = main_font.render(f'{chips_set} chips', True, 'white')
+    
+    def set_chips(n):
+        nonlocal chips_set, chips_on_text_1
+        chips_set += n
+        chips_on_text_1 = main_font.render(f'{chips_set} chips', True, 'white')
+    
+    
+    chip_changes = [-500, 500]
+    set_chips_positions = [(350, 235), (350, 305)]
+    
+    for i, (x, y) in enumerate(set_chips_positions):
+        change_amount = chip_changes[i]
+        change_amount_text = "+" if change_amount > 0 else "-"
+        buttons.append(Button(st_mi_button_surface, x, y, change_amount_text, on_click = lambda amt = change_amount: set_chips(amt)))
+    
+    
+    # surface and frames for animation
     dicesurf_scale = 250
     dicesurf = pygame.Surface((dicesurf_scale, dicesurf_scale), pygame.SRCALPHA)
     
-    
-    # Frames
     dices_1_6 = [
         pygame.transform.smoothscale(pygame.image.load(join('images','dices','dice1.png')).convert_alpha(), (dicesurf_scale,dicesurf_scale)),
         pygame.transform.smoothscale(pygame.image.load(join('images','dices','dice2.png')).convert_alpha(), (dicesurf_scale,dicesurf_scale)),
@@ -235,7 +268,7 @@ def lucky_dices():
     ]
     
     
-    # timer for frame switch
+    # timer for frame switch of animation
     frame_time = 100
     last_frame_change = 0
     dicean_duration = 2000
@@ -268,7 +301,8 @@ def lucky_dices():
         if not dicean_on and final_frame_index is not None and not win_checked:
             win_number = int(final_frame_index) + 1
             if win_number == guessed_number:
-                win_chips(500)
+                chips_won = chips_set * 6
+                win_chips(chips_won)
             win_checked = True
         
         
@@ -279,12 +313,14 @@ def lucky_dices():
         
         base_surface.blit(BG_lucky_dices, (0,0))
         base_surface.blit(dicesurf,(450,400))
+        base_surface.blit(chips_on_text_1, (500,250))
+        base_surface.blit(chips_on_text_2, (500,300))
         draw_chip_counter_small(100, 50)
         update_buttons(buttons, base_surface)
         draw_scaled()
         
         
-        clock.tick(60)
+        
         
         if current_state != 'lucky_dices' or not running:
             break
@@ -297,7 +333,7 @@ states = {
     "lucky_dices": lucky_dices}
 
 while running:
-    if chip_count < 1000:
+    if chip_count < 3000:
         chip_reset()
     
     else:
