@@ -48,12 +48,14 @@ def lose_chips(amount):
 
 def chip_reset():
     global chip_count
-    chip_count = 3000
+    chip_count += 3000
     
-    ok = Button(s_button_surface, Window_Width/2, Window_Height - 300, 'Thanks', back_to_menu)
+    ok = Button(m_button_surface, Window_Width/2, Window_Height - 300, '+ 3000 Chips', back_to_menu)
     
-    text_surf = main_font.render('Chips got restocked', True, 'gold')
-    text_rect = text_surf.get_rect(center=(Window_Width // 2, Window_Height - 500))
+    text_surf_1 = main_font.render('Seems like you missed it this time!', True, 'gold')
+    text_rect = text_surf_1.get_rect(center=(Window_Width // 2, Window_Height - 500))
+    text_surf_2 = main_font.render('Give it another go — here you are', True, 'gold')
+    text_rect_2 = text_surf_2.get_rect(center=(Window_Width // 2, Window_Height - 400))
     
     waiting = True
     while waiting:
@@ -71,7 +73,8 @@ def chip_reset():
         mx, my = get_scaled_mouse_pos()
         ok.changeColor(pygame.mouse.get_pos())
         ok.update(base_surface)
-        base_surface.blit(text_surf, text_rect)
+        base_surface.blit(text_surf_1, text_rect)
+        base_surface.blit(text_surf_2, text_rect_2)
         
         draw_scaled()
         clock.tick(60)
