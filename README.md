@@ -7,10 +7,10 @@ The game looks best in 16:9, but it’s playable at most other resolutions.
 
 ## Features
 - **Main Menu** for game selection
+- **Lucky Dice**
 
 ## Fetures in progress
 - **Settings** for fullscreen, resolution, audio, etc.
-- **Lucky Dice**
 
 ## Future Plans
 - **Wheel of Fortune**
